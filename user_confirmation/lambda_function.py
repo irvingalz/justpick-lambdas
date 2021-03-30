@@ -1,5 +1,7 @@
 import json
 import os
+from datetime import datetime, timezone
+
 
 import boto3
 
@@ -15,16 +17,16 @@ def lambda_handler(event, context):
         user_attributes = event["request"]["userAttributes"]
 
         user = {
-            "email": user_attributes["email"],
             "id": user_attributes["sub"],
+            "created": datetime.timestamp(datetime.now(timezone.utc)),
+            "email": user_attributes["email"],
+            "first_name": "",
+            "last_name": "",
+            "phone_number": user_attributes["phone_number"],
+            "profile_photo": "",
             "friends": [],
-            "metadata": {
-                "confirmed_email": user_attributes["email"],
-                "first_name": "",
-                "last_name": "",
-                "online": False,
-            },
-            "my_picks": []
+            "sessions": [],
+            "active_session": ""
         }
 
         print(f'Adding user {user["email"]} to table {table_name}')
